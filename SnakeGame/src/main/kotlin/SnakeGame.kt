@@ -9,6 +9,37 @@ enum class Direction { UP, DOWN, LEFT, RIGHT }
 
 class SnakeGame(private val size: Int, private val startPos: Position) {
     var body: LinkedList<Position> = LinkedList()
+    companion object {
+        @JvmStatic fun main(args: Array<String>) {
+            val app = Javalin.create().start(7000)
+            val game = Game(20, 10)
+
+            app.ws("/game") { ws ->
+                ws.onConnect { ctx ->
+                    println("Client connected")
+                }
+                ws.onClose { ctx ->
+                    println("Client disconnected")
+                }
+                ws.onMessage { ctx ->
+                    val message = ctx.message()
+                    when (message) {
+                        "UP" -> game.move(Direction.UP)
+                        "DOWN" -> game.move(Direction.DOWN)
+                        "LEFT" -> game.move(Direction.LEFT)
+                        "RIGHT" -> game.move(Direction.RIGHT)
+                    }
+                    if (game.isGameOver()) {
+                        ctx.send("GAME OVER")
+                        ctx.session.close()
+                    } else {
+                        val state = game.getState()
+                        ctx.send(state)
+                    }
+                }
+            }
+        }
+    }
 
     init {
         for (i in 0 until size) {
@@ -41,35 +72,7 @@ class SnakeGame(private val size: Int, private val startPos: Position) {
     fun contains(position: Position): Boolean {
         return body.contains(position)
     }
-    fun main() {
-        val app = Javalin.create().start(7000)
-        val game = Game(20, 10)
 
-        app.ws("/game") { ws ->
-            ws.onConnect { ctx ->
-                println("Client connected")
-            }
-            ws.onClose { ctx ->
-                println("Client disconnected")
-            }
-            ws.onMessage { ctx ->
-                val message = ctx.message()
-                when (message) {
-                    "UP" -> game.move(Direction.UP)
-                    "DOWN" -> game.move(Direction.DOWN)
-                    "LEFT" -> game.move(Direction.LEFT)
-                    "RIGHT" -> game.move(Direction.RIGHT)
-                }
-                if (game.isGameOver()) {
-                    ctx.send("GAME OVER")
-                    ctx.session.close()
-                } else {
-                    val state = game.getState()
-                    ctx.send(state)
-                }
-            }
-        }
-    }
 }
 
 class Game(private val width: Int, private val height: Int) {
@@ -123,4 +126,5 @@ class Game(private val width: Int, private val height: Int) {
         return position
     }
 }
+
 

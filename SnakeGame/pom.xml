@@ -10,9 +10,10 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <kotlin.version>1.6.0</kotlin.version>
-    <javalin.version>4.4.0</javalin.version>
-    <jetty.version>9.4.42.v20210604</jetty.version>
+    <kotlin.version>1.8.0</kotlin.version>
+    <kotlin.stdlib.jdk8.version>1.8.20</kotlin.stdlib.jdk8.version>
+    <javalin.version>5.4.2</javalin.version>
+    <jetty.version>9.4.51.v20230217</jetty.version>
     <project.build.finalName>Snake-Game-Server-1.0-SNAPSHOT</project.build.finalName>
     <project.version>0.0.1</project.version>
   </properties>
@@ -36,7 +37,7 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
+      <version>${kotlin.stdlib.jdk8.version}</version>
     </dependency>
       <dependency>
           <groupId>junit</groupId>
