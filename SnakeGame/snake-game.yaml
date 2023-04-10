@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snake-game-deployment
+spec:
+  selector:
+    matchLabels:
+      app: snake-game
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: snake-game
+    spec:
+      imagePullSecrets:
+          - name: regcred
+      containers:
+        - name: snake-game-container
+          image: artemkunyk/snake-game-repository:latest
+          ports:
+            - containerPort: 40080

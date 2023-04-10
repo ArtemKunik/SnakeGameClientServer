@@ -96,6 +96,12 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <sourceDirs>
+            <sourceDir>src/main/kotlin</sourceDir>
+            <sourceDir>src/test/kotlin</sourceDir>
+          </sourceDirs>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -121,7 +127,6 @@
             <mainClass>org.example.SnakeGame</mainClass>
           </container>
           <allowInsecureRegistries>true</allowInsecureRegistries>
-          <sendCredentialsOverHttp>true</sendCredentialsOverHttp>
         </configuration>
       </plugin>
     </plugins>

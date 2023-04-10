@@ -27,7 +27,11 @@ class SnakeGame(private val size: Int, private val startPos: Position) {
         body.addFirst(newHead)
         body.removeLast()
     }
-
+    fun send(session: Session, message: String) {
+        if (session.isOpen) {
+            session.remote.sendString(message)
+        }
+    }
     fun grow() {
         val tail = body.last
         val newTail = Position(tail.x, tail.y)
@@ -36,6 +40,35 @@ class SnakeGame(private val size: Int, private val startPos: Position) {
 
     fun contains(position: Position): Boolean {
         return body.contains(position)
+    }
+    fun main() {
+        val app = Javalin.create().start(7000)
+        val game = Game(20, 10)
+
+        app.ws("/game") { ws ->
+            ws.onConnect { ctx ->
+                println("Client connected")
+            }
+            ws.onClose { ctx ->
+                println("Client disconnected")
+            }
+            ws.onMessage { ctx ->
+                val message = ctx.message()
+                when (message) {
+                    "UP" -> game.move(Direction.UP)
+                    "DOWN" -> game.move(Direction.DOWN)
+                    "LEFT" -> game.move(Direction.LEFT)
+                    "RIGHT" -> game.move(Direction.RIGHT)
+                }
+                if (game.isGameOver()) {
+                    ctx.send("GAME OVER")
+                    ctx.session.close()
+                } else {
+                    val state = game.getState()
+                    ctx.send(state)
+                }
+            }
+        }
     }
 }
 
@@ -69,7 +102,7 @@ class Game(private val width: Int, private val height: Int) {
         return sb.toString()
     }
 
-    private fun isGameOver(): Boolean {
+     fun isGameOver(): Boolean {
         val head = snake.body.first
         if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height) {
             return true
@@ -91,18 +124,3 @@ class Game(private val width: Int, private val height: Int) {
     }
 }
 
-fun main() {
-    val app = Javalin.create().start(7000)
-    val game = Game(20, 10)
-
-    app.ws("/game") { ws ->
-        ws.onConnect { ctx ->
-            println("Client connected")
-        }
-        ws.onClose { ctx ->
-            println("Client disconnected")
-        }
-        ws.onMessage { ctx ->
-            val message = ctx.message()
-            when (message) {
-                "UP" -> game.move(Direction
