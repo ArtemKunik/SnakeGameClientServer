@@ -17,5 +17,6 @@ spec:
       containers:
         - name: snake-game-container
           image: artemkunyk/snake-game-repository:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 40080

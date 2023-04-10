@@ -1,5 +1,6 @@
 FROM openjdk:19-jdk-alpine
 WORKDIR /app
 COPY target/Snake-Game-Server-1.0-SNAPSHOT.jar /app.jar
+EXPOSE 40080
 ENTRYPOINT ["java","-jar","app.jar"]
 ENV LOG_LEVEL=debug
