@@ -1,7 +1,7 @@
-import java.util.*
+package org.example
 import io.javalin.Javalin
-import io.javalin.websocket.WsContext
 import org.eclipse.jetty.websocket.api.Session
+import java.util.*
 
 data class Position(val x: Int, val y: Int)
 
