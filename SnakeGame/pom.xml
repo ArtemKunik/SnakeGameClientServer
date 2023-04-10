@@ -13,7 +13,7 @@
     <kotlin.version>1.8.0</kotlin.version>
     <kotlin.stdlib.jdk8.version>1.8.20</kotlin.stdlib.jdk8.version>
     <javalin.version>5.4.2</javalin.version>
-    <jetty.version>9.4.51.v20230217</jetty.version>
+    <jetty.version>9.4.48.v20220622</jetty.version>
     <project.build.finalName>Snake-Game-Server-1.0-SNAPSHOT</project.build.finalName>
     <project.version>0.0.1</project.version>
   </properties>
@@ -23,6 +23,11 @@
       <groupId>io.javalin</groupId>
       <artifactId>javalin</artifactId>
       <version>${javalin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.6</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
@@ -129,6 +134,37 @@
           </container>
           <allowInsecureRegistries>true</allowInsecureRegistries>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <transformers>
+            <transformer
+                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+              <mainClass>org.example.SnakeGame</mainClass> <!-- Here you should put the main class of your application -->
+            </transformer>
+          </transformers>
+          <filters>
+            <filter> <!-- This filter is needed to avoid a bug in the shade plugin -->
+              <artifact>*:*</artifact>
+              <excludes>
+                <exclude>META-INF/*.SF</exclude>
+                <exclude>META-INF/*.DSA</exclude>
+                <exclude>META-INF/*.RSA</exclude>
+              </excludes>
+            </filter>
+          </filters>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
